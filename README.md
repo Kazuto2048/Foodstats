@@ -8,3 +8,5 @@
     <li><code>python -m install --upgrade pip</code></li>
     <li><code>pip install -r requirements.txt</code></li>
 </ul>
+<p>To start the project, you need to run unicorn using the command: <code>uvicorn main:app --reload</code><br>
+Then go to <a href="http://127.0.0.1:8000/docs">http://127.0.0.1:8000/docs</a> to view the api </p>
