@@ -1,34 +1,41 @@
-import codecs
+# imports from pip
 import requests
-from datetime import datetime
-import os
+from typing import Annotated
+from fastapi.params import Depends
 
-# func for read history from file
-def readHistory():
-    if os.path.getsize("history.txt") != 0:
-        with codecs.open("history.txt", "r", "UTF-8") as f:
-            history = f.read()
-            return history
+# imports from source code
+from back.cfg import FoodDataAdd, RequestData
+from back.databese.db import drop_tables, create_tables
+from back.databese.repository import HistoryRepository
+
+
+# func for read history from DB
+async def readHistory():
+    # DB request
+    res = await HistoryRepository.get_all()
+    print(res)
+    # check is there any hictory
+    if res != []:
+            return res
     else:
         return "Истории еще нет"
 
-# func for write new line in history file
-def writeHistory(prod: str):
-    with codecs.open("history.txt", "a", "UTF-8") as f:
-        if os.path.getsize("history.txt") != 0:
-            f.write(f"\n{prod}")
-        else:
-            f.write(prod)
-            print(f"Система: Продукт \"{prod}\" успешно добавлен в историю; Дата: {datetime.now().strftime('%Y-%m-%d')}; Время: {datetime.now().strftime('%H:%M:%S')}")
+# func for write new line in history DB
+async def writeHistory(prod:  Annotated[FoodDataAdd, Depends()]):
+    # DB request
+    return await HistoryRepository.add_line(prod)
 
-# func for delete history
-def deleteHistory():
-    with codecs.open("history.txt", "r", "UTF-8") as f:
-        f.truncate(0)
+# func for delete history DB
+async def deleteHistory():
+    # DB requests
+    await drop_tables()
+    await create_tables()
+    return "История успешно удалена"
 
 # func for get data of product by api (for request needs a barcode)
-def getProdByBarcode(barcode: str):
-    url = f"https://ru.openfoodfacts.org/api/v0/product/{barcode}.json"
+async def getProdByBarcode(reqData: RequestData):
+
+    url = f"https://ru.openfoodfacts.org/api/v0/product/{reqData.Data}.json"
 
     response = requests.get(url)
     #request processing
@@ -43,7 +50,7 @@ def getProdByBarcode(barcode: str):
             energy_kcal = product.get("nutriments", {}).get("energy-kcal", "Нет данных")
             # extract weight/volume from query data
             quantity = product.get("quantity", "Нет данных")
-            return f"- {product_name} (Энергетическая ценность: {energy_kcal} ккал, объем/вес: {quantity})"
+            return [product_name, energy_kcal, quantity, reqData.UserId]
         # if there isn`t ane data on the request in the response
         else:
             return "Продукт не найден."
@@ -52,7 +59,7 @@ def getProdByBarcode(barcode: str):
         return f"Ошибка запроса: {response.status_code}"
 
 # func for getting data of product by api (for request needs a name)
-def getProdByName(search_query: str):
+async def getProdByName(search_query: str):
     prods = []
     url = f"https://ru.openfoodfacts.org/cgi/search.pl?search_terms={search_query}&search_simple=1&action=process&json=1"
 
