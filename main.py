@@ -1,8 +1,6 @@
-from back.funcs import readHistory, getProdByBarcode, getProdByName
-from back.cfg import barcode, search_query
+from back.routes import router as food_router
+from fastapi import FastAPI
 
 
-if __name__ == "__main__":
-    readHistory()
-    getProdByBarcode(barcode)
-    getProdByName(search_query)
+app = FastAPI()
+app.include_router(food_router)
