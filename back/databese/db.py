@@ -1,7 +1,8 @@
 # imports from pip
+from sqlalchemy import Date, DateTime
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column
-from sqlalchemy.util import await_only
+
 
 # declare connection to DB
 engine = create_async_engine("sqlite+aiosqlite:///database.db")
@@ -20,6 +21,16 @@ class FoodHistory(Base):
     Quantity: Mapped[str]
     UserId: Mapped[int]
 
+# declare table construction
+class Users(Base):
+    __tablename__ = "Users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    Name: Mapped[str]
+    Username: Mapped[str]
+    RegDate: Mapped[Date] = mapped_column(Date, nullable=True)
+    # Session: Mapped[str]
+    # SessionStart: Mapped[DateTime]
 
 # func to create tables
 async def create_tables():
