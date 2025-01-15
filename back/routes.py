@@ -4,9 +4,8 @@ from fastapi.params import Depends
 from fastapi import APIRouter
 
 # imports from source code
-from back.cfg import FoodDataAdd, RequestData
-from back.funcs import getProdByName, getProdByBarcode, deleteHistory, writeHistory, readHistory
-
+from back.cfg import FoodDataAdd, RequestData, AddUserData
+from back.funcs import getProdByName, getProdByBarcode, deleteHistory, writeHistory, readHistory, getValidUsername, addUserToDB
 
 # construction for declaring API functions
 router = APIRouter(prefix="/api")
@@ -37,3 +36,13 @@ async def writeHistoryData(food: Annotated[FoodDataAdd, Depends()]):
 @router.get("/history/delete")
 async def deleteHistoryData():
     return await deleteHistory()
+
+# API func for add user
+@router.get("/addUser")
+async def addUser(User: Annotated[AddUserData, Depends()]):
+    if await getValidUsername(User.Username):
+        return {"Status": 200, "id": await addUserToDB(User)}
+    else:
+        return "Такой Юзернейм уже существует"
+
+# API func for

@@ -4,9 +4,9 @@ from typing import Annotated
 from fastapi.params import Depends
 
 # imports from source code
-from back.cfg import FoodDataAdd, RequestData
+from back.cfg import FoodDataAdd, RequestData, AddUserData
 from back.databese.db import drop_tables, create_tables
-from back.databese.repository import HistoryRepository
+from back.databese.repository import HistoryRepository, UsersRepository
 
 
 # func for read history from DB
@@ -21,7 +21,7 @@ async def readHistory():
         return "Истории еще нет"
 
 # func for write new line in history DB
-async def writeHistory(prod:  Annotated[FoodDataAdd, Depends()]):
+async def writeHistory(prod: Annotated[FoodDataAdd, Depends()]) -> int:
     # DB request
     return await HistoryRepository.add_line(prod)
 
@@ -87,3 +87,14 @@ async def getProdByName(search_query: str):
     # error handling
     else:
         return f"Ошибка запроса: {response.status_code}"
+
+# func for check free usernames
+async def getValidUsername(Username: str) -> bool:
+    # DB request
+    res = await UsersRepository.isValidUsername(Username)
+    return res
+
+# func for add user
+async def addUserToDB(User: Annotated[AddUserData, Depends()]) -> int:
+    # DB request
+    return await UsersRepository.add_user(User)

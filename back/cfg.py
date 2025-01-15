@@ -1,5 +1,16 @@
 # imports from pip
+import datetime
 from pydantic import BaseModel
+
+# class for DB func
+class AddUserData(BaseModel):
+    Name: str
+    Username: str
+    RegDate: datetime.date
+
+# class for API and funcs usage
+class UserData(AddUserData):
+    id: int
 
 # class for API and funcs usage
 class RequestData(BaseModel):
