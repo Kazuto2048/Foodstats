@@ -1,5 +1,7 @@
 # imports from pip
-from sqlalchemy import Date, DateTime
+from datetime import datetime
+
+from sqlalchemy import Date, DateTime, String
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column
 
@@ -28,9 +30,11 @@ class Users(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     Name: Mapped[str]
     Username: Mapped[str]
+    Password: Mapped[str]
     RegDate: Mapped[Date] = mapped_column(Date, nullable=True)
-    # Session: Mapped[str]
-    # SessionStart: Mapped[DateTime]
+    Token: Mapped[str] = mapped_column(String, nullable=True)
+    SessionEnd: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+
 
 # func to create tables
 async def create_tables():
