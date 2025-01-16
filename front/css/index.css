@@ -1,0 +1,28 @@
+body {
+    background-color: #3456656e;
+}
+table{
+    font-family: sans-serif;
+    font-size: small;
+    height: 10vh;
+}
+td{
+    margin-right: 10px;
+}
+tr{
+    margin-bottom: 15px;
+}
+#history_header{
+    margin-bottom: auto;
+}
+.p_histable{
+    margin: 5px 0 5px 0;
+}
+.add_li{
+    margin-bottom: 15px;
+    padding 10px;
+}
+.add_button{
+    text-align: center;
+    display: flex;
+}
