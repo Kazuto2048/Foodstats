@@ -2,15 +2,28 @@
 import datetime
 from pydantic import BaseModel
 
+# class for check session
+class checkSession(BaseModel):
+    Username: str
+    Token: str
+
+# class for login
+class UserLogin(BaseModel):
+    Username: str
+    Password: str
+
 # class for DB func
 class AddUserData(BaseModel):
     Name: str
     Username: str
+    Password: str
     RegDate: datetime.date
 
 # class for API and funcs usage
 class UserData(AddUserData):
     id: int
+    Token: str
+    SessionEnd: datetime.datetime
 
 # class for API and funcs usage
 class RequestData(BaseModel):

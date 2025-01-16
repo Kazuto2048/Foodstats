@@ -4,8 +4,8 @@ from fastapi.params import Depends
 from fastapi import APIRouter
 
 # imports from source code
-from back.cfg import FoodDataAdd, RequestData, AddUserData
-from back.funcs import getProdByName, getProdByBarcode, deleteHistory, writeHistory, readHistory, getValidUsername, addUserToDB
+from back.cfg import FoodDataAdd, RequestData, AddUserData, UserLogin, checkSession
+from back.funcs import getProdByName, getProdByBarcode, deleteHistory, writeHistory, readHistory, getValidUsername, addUserToDB, userLogin
 
 # construction for declaring API functions
 router = APIRouter(prefix="/api")
@@ -23,19 +23,18 @@ async def getDataByName(reqData: Annotated[RequestData, Depends()]):
 
 # API function for processing read history req
 @router.get("/history/read")
-async def readHistoryData():
-    return await readHistory()
+async def readHistoryData(session: Annotated[checkSession, Depends()]):
+    return await readHistory(session)
 
 # API function for processing write history req
 @router.post("/history/write")
-async def writeHistoryData(food: Annotated[FoodDataAdd, Depends()]):
-    return await writeHistory(food)
-    # return await HistoryRepository.add_line(food)
+async def writeHistoryData(food: Annotated[FoodDataAdd, Depends()], session: Annotated[checkSession, Depends()]):
+    return await writeHistory(food, session)
 
 # API function for processing delete history req
 @router.get("/history/delete")
-async def deleteHistoryData():
-    return await deleteHistory()
+async def deleteHistoryData(session: Annotated[checkSession, Depends()]):
+    return await deleteHistory(session)
 
 # API func for add user
 @router.get("/addUser")
@@ -45,4 +44,7 @@ async def addUser(User: Annotated[AddUserData, Depends()]):
     else:
         return "Такой Юзернейм уже существует"
 
-# API func for
+# API func for login
+@router.post("/login")
+async def login(User: Annotated[UserLogin, Depends()]):
+    return await userLogin(User)
