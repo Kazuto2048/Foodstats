@@ -1,0 +1,28 @@
+.header {
+    border-radius: 15px;
+    border: 1px solid #9E9E9E;
+    display: flex;
+    justify-content: flex-start;
+    background-color: #4caf507d;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+#icon{
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    margin-right: 20px;
+    margin-left: 5px;
+}
+#menu_button{
+    margin-left: auto;
+}
+.button{
+    text-decoration: none;
+    color: black;
+    font-family: sans-serif;
+    padding: 5px;
+    background-color: #4caf507d;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
