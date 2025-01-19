@@ -8,7 +8,6 @@ from fastapi.params import Depends
 
 # imports from source code
 from back.cfg import FoodDataAdd, RequestData, AddUserData, UserLogin, checkSession
-from back.databese.db import drop_tables, create_tables
 from back.databese.repository import HistoryRepository, UsersRepository
 
 
@@ -38,8 +37,7 @@ async def writeHistory(prod: Annotated[FoodDataAdd, Depends()], session: Annotat
 async def deleteHistory(session: Annotated[checkSession, Depends()]):
     if await checkToken(session.Username, session.Token):
         # DB requests
-        await drop_tables()
-        await create_tables()
+        await HistoryRepository.deleteHistory()
         return "История успешно удалена"
     else:
         return "invalid token"

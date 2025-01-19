@@ -1,6 +1,6 @@
 # imports from pip
 from datetime import datetime, timedelta
-from sqlalchemy import select, update
+from sqlalchemy import select, update, delete
 
 # imports from source code
 from back.cfg import FoodDataAdd, AddUserData
@@ -34,6 +34,12 @@ class HistoryRepository:
             historyModels = result.scalars().all()
             return historyModels
 
+    #DB func to clear history
+    @classmethod
+    async def deleteHistory(cls):
+        async with new_session as session:
+            session.execute(delete(FoodHistory))
+            session.commit()
 
 # class for user DB funcs
 class UsersRepository:
